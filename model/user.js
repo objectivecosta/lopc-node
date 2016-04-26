@@ -1,30 +1,42 @@
 "use strict";
 var ObjectId = require('mongodb').ObjectID;
 class User {
-  constructor(id, pullCallback) {
+  constructor(query, pullCallback) {
     this.pulled = false;
 
+    query = _normalizeID(query);
+
     let self = this;
+    
     let users = global.database.collection('users');
-    users.find({_id: ObjectId(id)}).toArray(function (err, docs) {
+
+    users.find(query).toArray(function (err, docs) {
       if (!err) {
-        if (docs.length != 1) {
+        if (docs.length > 1) {
           console.log('Could not find user with ID: ' + id);
-          pullCallback(false);
+          pullCallback(422);
+        } if (docs.length == 0) {
+          pullCallback(404);
         } else {
           self.pulled = true;
           let user = docs[0];
           for (var property in user) {
             self[property] = user[property]
           }
-          pullCallback(true);
+          pullCallback(200);
         }
       } else {
         console.log('Could not find user with ID: ' + id);
-        pullCallback(false);
+        pullCallback(500);
       }
     });   
   }
+}
+
+function _normalizeID(query) {
+  if (query.id) query._id = ObjectId(query.id);
+  delete query.id;
+  return query;
 }
 
 module.exports = User;

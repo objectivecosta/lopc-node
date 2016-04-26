@@ -1,0 +1,16 @@
+{
+  "name": "lopc",
+  "version": "1.0.0",
+  "description": "Low Orbit Push Cannon - any similarity with other pieces of software is a mere coincidence",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.4",
+    "jsonwebtoken": "^5.7.0",
+    "mongodb": "^2.1.17"
+  }
+}

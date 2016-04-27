@@ -1,41 +1,44 @@
 "use strict";
 var ObjectId = require('mongodb').ObjectID;
 class User {
-  constructor(query, pullCallback) {
-    this.pulled = false;
+  constructor(object) {
+    object = _normalizeID(object);
+    for (var property in object) {
+      this[property] = object[property];
+    } 
+  }
 
-    if (query == null) return;
-
-    query = _normalizeID(query);
-
-    let self = this;
-    
+  save(callback) {
     let users = global.database.collection('users');
-
-    users.find(query).toArray(function (err, docs) {
-      if (!err) {
-        _processData(docs, self, pullCallback);
-      } else {
-        console.log('Could not find user with ID: ' + id);
-        pullCallback(500);
-      }
-    });   
+    if (!this.subscriptions) this.subscriptions = []
+    users.save(this, {w:1}, callback);
   }
 
   static usersForQuery(query, callback) {
     let users = global.database.collection('users');
+
+    query = _normalizeID(query);
+
     users.find(query).toArray(function (err, docs) {
       if (!err) {
-        callback(null, _createUsers(docs));
+        callback(null, _createUsersFromDocs(docs));
       } else {
         console.log('Error fetching users: ' + err);
         callback(err, null);
       }  
     });
   }
+
+  static validate(object) {
+    if (!object._id || !object.type) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 }
 
-function _createUsers(docs) {
+function _createUsersFromDocs(docs) {
   var users = [];
   for (var dbUser of docs) {
     var user = new User(null, null);
@@ -47,22 +50,6 @@ function _createUsers(docs) {
   }
 
   return users;
-}
-
-function _processData(data, user, pullCallback) {
-  if (data.length > 1) {
-    console.log('Could not find user with ID: ' + id);
-    pullCallback(422);
-  } if (data.length == 0) {
-    pullCallback(404);
-  } else {
-    user.pulled = true;
-    let dbUser = data[0];
-    for (var property in dbUser) {
-      user[property] = dbUser[property]
-    }
-    pullCallback(200);
-  }
 }
 
 function _normalizeID(query) {

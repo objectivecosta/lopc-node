@@ -1,5 +1,8 @@
 var MongoClient = require('mongodb').MongoClient;
 var url = 'mongodb://localhost:27017/lopc';
+var Router = require('./router');
+var authorization = require('./middleware/authorization');
+var bodyParser = require('body-parser');
 
 global.config = require('konfig')();
 
@@ -17,9 +20,9 @@ module.exports.database = function () {
 module.exports.express = function () {
   var express = require('express');
   global.app = express();
-  global.app.listen(3009);
+  global.app.use(bodyParser.json());
+  global.app.use(authorization);
+  global.router = new Router(global.app);
+  global.app.listen(global.config.app.port);
 }
 
-module.exports.cli = function() {
-
-}

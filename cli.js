@@ -5,7 +5,6 @@ var yaml = require('write-yaml');
 var uuid = require('node-uuid');
 var crypto = require('crypto');
 
-
 setup.database();
 
 prompt.start();

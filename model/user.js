@@ -4,6 +4,8 @@ class User {
   constructor(query, pullCallback) {
     this.pulled = false;
 
+    if (query == null) return;
+
     query = _normalizeID(query);
 
     let self = this;
@@ -19,6 +21,32 @@ class User {
       }
     });   
   }
+
+  static usersForQuery(query, callback) {
+    let users = global.database.collection('users');
+    users.find(query).toArray(function (err, docs) {
+      if (!err) {
+        callback(null, _createUsers(docs));
+      } else {
+        console.log('Error fetching users: ' + err);
+        callback(err, null);
+      }  
+    });
+  }
+}
+
+function _createUsers(docs) {
+  var users = [];
+  for (var dbUser of docs) {
+    var user = new User(null, null);
+    for (var property in dbUser) {
+      user[property] = dbUser[property];
+    }
+    user.pulled = true;
+    users.push(user);
+  }
+
+  return users;
 }
 
 function _processData(data, user, pullCallback) {

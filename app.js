@@ -20,11 +20,11 @@ global.app.get('/id', function (req, res) {
 });
 
 global.app.get('/application', function (req, res) {
-  var rafaelcosta = new User({application: 'me.rafaelcosta.sweettweet'}, function (status) {
-    if (status == 200) {
-      res.send(JSON.stringify(rafaelcosta));
+  User.usersForQuery({application: 'me.rafaelcosta.sweettweet'}, function (err, users) {
+    if (!err) {
+      res.send(JSON.stringify(users));
     } else {
-      res.send('FAILED');
+      res.send('ERROR');
     }
   });
 });

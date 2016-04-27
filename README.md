@@ -1,6 +1,6 @@
 # Low Orbit Push Cannon
 With the early death of Parse.com, alternatives must be made.
-This project intends to be an open-source, self-hosted alternative
+This project intends to be an open-source, self-hosted alternative.
 
 ## SDKs 
 

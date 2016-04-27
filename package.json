@@ -11,6 +11,10 @@
   "dependencies": {
     "express": "^4.13.4",
     "jsonwebtoken": "^5.7.0",
-    "mongodb": "^2.1.17"
+    "konfig": "^0.2.1",
+    "mongodb": "^2.1.17",
+    "node-uuid": "^1.4.7",
+    "prompt": "^1.0.0",
+    "write-yaml": "^0.2.2"
   }
 }

@@ -1,4 +1,7 @@
-require('./setup');
+var setup = require('./setup');
+
+setup.database();
+setup.express();
 
 var User = require('./model/user');
 

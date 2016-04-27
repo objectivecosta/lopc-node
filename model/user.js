@@ -12,24 +12,28 @@ class User {
 
     users.find(query).toArray(function (err, docs) {
       if (!err) {
-        if (docs.length > 1) {
-          console.log('Could not find user with ID: ' + id);
-          pullCallback(422);
-        } if (docs.length == 0) {
-          pullCallback(404);
-        } else {
-          self.pulled = true;
-          let user = docs[0];
-          for (var property in user) {
-            self[property] = user[property]
-          }
-          pullCallback(200);
-        }
+        _processData(docs, self, pullCallback);
       } else {
         console.log('Could not find user with ID: ' + id);
         pullCallback(500);
       }
     });   
+  }
+}
+
+function _processData(data, user, pullCallback) {
+  if (data.length > 1) {
+    console.log('Could not find user with ID: ' + id);
+    pullCallback(422);
+  } if (data.length == 0) {
+    pullCallback(404);
+  } else {
+    user.pulled = true;
+    let dbUser = data[0];
+    for (var property in dbUser) {
+      user[property] = dbUser[property]
+    }
+    pullCallback(200);
   }
 }
 

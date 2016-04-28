@@ -1,5 +1,6 @@
 var MongoClient = require('mongodb').MongoClient;
-var url = 'mongodb://localhost:27017/lopc';
+
+var url = process.env.MONGOURL || 'mongodb://localhost:27017/lopc';
 var Router = require('./router');
 var authorization = require('./middleware/authorization');
 var bodyParser = require('body-parser');

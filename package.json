@@ -10,8 +10,17 @@
   "author": "Rafael Costa <rafael@rafaelcosta.me>",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.15.0",
     "express": "^4.13.4",
     "jsonwebtoken": "^5.7.0",
-    "mongodb": "^2.1.17"
+    "konfig": "^0.2.1",
+    "mongodb": "^2.1.17",
+    "node-uuid": "^1.4.7",
+    "prompt": "^1.0.0",
+    "write-yaml": "^0.2.2"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "sinon": "^1.17.3"
   }
 }

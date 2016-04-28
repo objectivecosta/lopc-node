@@ -23,6 +23,7 @@ module.exports.express = function () {
   global.app.use(bodyParser.json());
   global.app.use(authorization);
   global.router = new Router(global.app);
-  global.app.listen(global.config.app.port);
+  var port = process.env.PORT || global.config.app.port;
+  global.app.listen(port);
 }
 

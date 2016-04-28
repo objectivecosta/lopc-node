@@ -4,6 +4,7 @@
   "description": "Low Orbit Push Cannon - any similarity with other pieces of software is a mere coincidence",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "mocha"
   },
   "author": "Rafael Costa <rafael@rafaelcosta.me>",

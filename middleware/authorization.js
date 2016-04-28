@@ -5,8 +5,13 @@ module.exports = function (req, res, next) {
   var authorization = req.get('authorization');
 
   var seed = global.config.seed.seed;
+  console.log('Seed: ' + seed);
   var composition = identifier + seed;
+
   var expectedKey = crypto.createHash('sha256').update(composition).digest('hex');
+
+  console.log('Expected Key: ' + expectedKey);
+  console.log('Actual Key: ' + authorization);
 
   if (authorization == expectedKey) {
     next();

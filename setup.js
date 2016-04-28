@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 global.config = require('konfig')();
 
+global.config.seed = {};
 global.config.seed.seed = process.env.AUTH_SEED;
 
 module.exports.database = function () {

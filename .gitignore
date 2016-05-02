@@ -1,3 +1,4 @@
 node_modules/
 config/seed.yml
 app.yaml
+data/*

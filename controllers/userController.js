@@ -19,6 +19,10 @@ class UserController {
       });
     }
   }
+
+  static show(req, res) {
+    req.get('id');
+  }
 }
 
 module.exports = UserController;

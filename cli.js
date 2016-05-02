@@ -5,8 +5,6 @@ var yaml = require('write-yaml');
 var uuid = require('node-uuid');
 var crypto = require('crypto');
 
-setup.database();
-
 prompt.start();
 
 listenForCommand();
@@ -61,4 +59,3 @@ function executeCommand(name) {
     vm.runInContext(name + '();', commands);
   }
 }
-

@@ -1,6 +1,7 @@
 var setup = require('./setup');
 
 setup.express();
+setup.data();
 
 var User = require('./model/user');
 var UserController = require('./controllers/userController');

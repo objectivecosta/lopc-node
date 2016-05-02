@@ -1,6 +1,7 @@
 "use strict";
 
 var User = require('../model/user');
+var uuid = require('node-uuid');
 
 class UserController {
   static create(req, res) {
@@ -10,7 +11,7 @@ class UserController {
       var user = new User(req.body);
       user.application = req.get('identifier');
       user.last_online = (new Date()).getTime();
-      user.save(function (err, data) {
+      global.DataStorage.save(user.id, user, function (err, data) {
         if (!err) {
           res.json({result: 'OK', status: 200});
         } else {
@@ -21,7 +22,14 @@ class UserController {
   }
 
   static show(req, res) {
-    req.get('id');
+    var id = req.get('id');
+    global.DataStorage.get(id, function (err, data) {
+      if (err) {
+        res.json({result: 'NOK', status: 500, message: err});
+      } else {
+        res.json({result: 'OK', status: 200, data: data})	;
+      }
+    });
   }
 }
 

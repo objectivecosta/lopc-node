@@ -1,10 +1,10 @@
 "use strict";
 var ObjectId = require('mongodb').ObjectID;
 
-class User {
+class AdminUser {
 
   collectionName() {
-    return "users";
+    return "adminUsers";
   }
 
   collection() {
@@ -18,23 +18,18 @@ class User {
   }
 
   save(callback) {
-    let users = this.collection();
-    users.save(this, {w:1}, callback);
-  }
-
-  static validate(user) {
-    if (!user.deviceType || !user.deviceToken || !user.app) return false;
-    return true;
+    let adminUsers = this.collection();
+    adminUsers.save(this, {w:1}, callback);
   }
 
   static usersForQuery(query, callback) {
-    let users = this.collection();
+    let adminUsers = this.collection();
 
-    users.find(query).toArray(function (err, docs) {
+    adminUsers.find(query).toArray(function (err, docs) {
       if (!err) {
         callback(null, _createUsersFromDocs(docs));
       } else {
-        console.log('Error fetching users: ' + err);
+        console.log('Error fetching adminUsers: ' + err);
         callback(err, null);
       }
     });
@@ -44,9 +39,13 @@ class User {
 function _createUsersFromDocs(docs) {
   var users = [];
   for (userEntry of docs) {
-    users.push(new User(userEntry));
+    users.push(new AdminUser(userEntry));
   }
   return users;
 }
+
+module.exports = AdminUser;
+
+
 
 module.exports = User;

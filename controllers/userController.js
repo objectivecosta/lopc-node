@@ -4,6 +4,11 @@ var User = require('../model/user');
 var uuid = require('node-uuid');
 
 class UserController {
+
+  static index(req, res) {
+    
+  }
+
   static create(req, res) {
     if (User.validate(req.body) == false) {
       res.json({result: 'NOK', status: 400, message: 'Bad request'});

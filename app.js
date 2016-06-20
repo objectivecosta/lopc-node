@@ -11,6 +11,9 @@ var port = 9002;
 
 global.app.listen(port);
 
+global.database
+
+
 var User = require('./model/user');
 var AdminUser = require('./model/adminUser');
 

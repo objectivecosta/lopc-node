@@ -3,12 +3,12 @@ var ObjectId = require('mongodb').ObjectID;
 
 class User {
 
-  collectionName() {
+  static collectionName() {
     return "users";
   }
 
-  collection() {
-    global.database.collection(this.collectionName());
+  static collection() {
+    global.database.collection(User.collectionName());
   }
 
   constructor(object) {
@@ -18,7 +18,7 @@ class User {
   }
 
   save(callback) {
-    let users = this.collection();
+    let users = User.collection();
     users.save(this, {w:1}, callback);
   }
 
@@ -27,12 +27,13 @@ class User {
     return true;
   }
 
-  static usersForQuery(query, callback) {
-    let users = this.collection();
+  static usersForQuery(query, serialise, callback) {
+    let users = User.collection();
 
     users.find(query).toArray(function (err, docs) {
       if (!err) {
-        callback(null, _createUsersFromDocs(docs));
+        if (serialise == true) callback(null, _createUsersFromDocs(docs));
+        else callback(null, docs);
       } else {
         console.log('Error fetching users: ' + err);
         callback(err, null);

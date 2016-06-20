@@ -1,0 +1,5 @@
+default:
+  server: ADDRESS
+  port: PORT
+  username: USERNAME
+  password: PASSWORD

@@ -3,12 +3,12 @@ var ObjectId = require('mongodb').ObjectID;
 
 class AdminUser {
 
-  collectionName() {
+  static collectionName() {
     return "adminUsers";
   }
 
-  collection() {
-    global.database.collection(this.collectionName());
+  static collection() {
+    global.database.collection(AdminUser.collectionName());
   }
 
   constructor(object) {
@@ -18,12 +18,12 @@ class AdminUser {
   }
 
   save(callback) {
-    let adminUsers = this.collection();
+    let adminUsers = AdminUser.collection();
     adminUsers.save(this, {w:1}, callback);
   }
 
   static usersForQuery(query, callback) {
-    let adminUsers = this.collection();
+    let adminUsers = AdminUser.collection();
 
     adminUsers.find(query).toArray(function (err, docs) {
       if (!err) {

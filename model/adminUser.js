@@ -45,7 +45,3 @@ function _createUsersFromDocs(docs) {
 }
 
 module.exports = AdminUser;
-
-
-
-module.exports = User;

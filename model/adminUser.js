@@ -8,7 +8,7 @@ class AdminUser {
   }
 
   static collection() {
-    global.database.collection(AdminUser.collectionName());
+    return global.database.collection(AdminUser.collectionName());
   }
 
   constructor(object) {

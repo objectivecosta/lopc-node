@@ -8,7 +8,7 @@ class User {
   }
 
   static collection() {
-    global.database.collection(User.collectionName());
+    return global.database.collection(User.collectionName());
   }
 
   constructor(object) {
@@ -29,6 +29,7 @@ class User {
 
   static usersForQuery(query, serialise, callback) {
     let users = User.collection();
+    debugger;
 
     users.find(query).toArray(function (err, docs) {
       if (!err) {

@@ -3,6 +3,18 @@ global.app = express();
 var bodyParser = require('body-parser');
 global.app.use(bodyParser.json());
 
+var querystring = require("querystring");
+
+global.config = require('konfig')();
+
+var MongoClient = require('mongodb').MongoClient
+var url = `mongodb://${querystring.escape(global.config.mongodb.username)}:${querystring.escape(global.config.mongodb.password)}@${global.config.mongodb.server}:${global.config.mongodb.port}/${global.config.mongodb.database}`;
+MongoClient.connect(url, function (err, db) {
+  if (err) console.log('ERROR: ' + err);
+  else console.log('Connected to DB');
+  global.database = db;
+});
+
 var Router = require('./router');
 
 global.router = new Router(global.app);
@@ -10,9 +22,6 @@ global.router = new Router(global.app);
 var port = 9002;
 
 global.app.listen(port);
-
-global.database
-
 
 var User = require('./model/user');
 var AdminUser = require('./model/adminUser');

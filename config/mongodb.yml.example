@@ -3,3 +3,4 @@ default:
   port: PORT
   username: USERNAME
   password: PASSWORD
+  database: DBNAME

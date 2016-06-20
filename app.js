@@ -16,6 +16,9 @@ MongoClient.connect(url, function (err, db) {
 });
 
 var Router = require('./router');
+var ApplePushNotificationService = require('./lib/apns.js');
+
+global.pushConnection = ApplePushNotificationService.connect(null, {pfx: './certs/rJenkins_Push_Dev.p12'});
 
 global.router = new Router(global.app);
 
@@ -27,6 +30,7 @@ var User = require('./model/user');
 var AdminUser = require('./model/adminUser');
 
 var UserController = require('./controllers/userController');
+var PushController = require('./controllers/pushController');
 
 var git = require('./git');
 

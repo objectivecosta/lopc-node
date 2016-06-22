@@ -17,6 +17,7 @@ There are none, as of yet.
 - A decent API
 - a lot more stuff
 - Add decent authentication
+- Add Custom Payload updating
 
 ## How can I contribute
 

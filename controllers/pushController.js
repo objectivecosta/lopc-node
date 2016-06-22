@@ -13,7 +13,8 @@ class PushController {
 
     if (!ApplePushNotificationService.hasConnection(appId)) {
       ApplePushNotificationService.connect(appId, {
-        pfx: "./certs/rJenkins_Push_Dev.p12"
+        pfx: "./certs/rJenkins_Push_Dev.p12",
+        port: 2195
       });
     }
 

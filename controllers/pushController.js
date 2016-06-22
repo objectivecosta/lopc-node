@@ -2,8 +2,8 @@
 
 var ApplePushNotificationService = require('../lib/apns');
 
-var App = require('./model/app');
-var User = require('./model/user');
+var App = require('../model/app');
+var User = require('../model/user');
 
 var connections = [];
 

@@ -52,6 +52,7 @@ function _actualSend(appId, userId, payload, callback) {
     } else {
       var user = users[0];
       var token = user.deviceToken;
+      payload._deviceBadgeNumber = user.deviceBadgeNumber;
       ApplePushNotificationService.send(appId, token, payload, function (err, sentPayload) {
         if (err) {
           console.log("#_actualSend error: " + err);

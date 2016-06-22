@@ -8,7 +8,8 @@ There are none, as of yet.
 
 ## How-to setup
 
-Run the CLI, seed the server and then run the app.js :)
+~~Run the CLI, seed the server and then run the app.js :)~~
+(need to update this)
 
 ## TODO:
 

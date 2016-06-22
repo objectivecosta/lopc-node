@@ -28,7 +28,7 @@ class PushController {
           res.json({result: 'NOK', error: 'Error fetching app from database'});
         } else {
           var app = apps[0];
-          var developmentPushCertificate = app.developmentPushCertificate;
+          var developmentPushCertificate = app.developmentPushCertificate.buffer;
 
           ApplePushNotificationService.connect(appId, {
             pfx: developmentPushCertificate,

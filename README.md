@@ -2,7 +2,7 @@
 With the early death of Parse.com, alternatives must be made.
 This project intends to be an open-source, self-hosted alternative.
 
-## SDKs 
+## SDKs
 
 There are none, as of yet.
 
@@ -16,8 +16,9 @@ There are none, as of yet.
 - A decent documentation
 - A decent API
 - a lot more stuff
+- Add decent authentication
 
 ## How can I contribute
 
-Right now, you can't. When I get a barebones version of this thing working, I'll start 
+Right now, you *can't*. When I get a barebones version of this thing working, I'll start
 accepting PRs

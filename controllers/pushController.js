@@ -67,6 +67,7 @@ function _actualSend(appId, query, payload, callback) {
             callback(err, null);
           } else {
             console.log("#_actualSend sent!");
+            user.deviceBadgeNumber
             callback(null, sentPayload);
           }
         });

@@ -17,13 +17,23 @@ class User {
     }
   }
 
+  updateWith(json, app, callback) {
+    this.deviceToken = json.deviceToken;
+    this.deviceType = json.deviceType;
+    this.deviceOS = json.deviceOS;
+    this.deviceOSVersion = json.deviceOSVersion;
+    this.app = app;
+    this.deviceLastActiveAt = "" + (new Date()).toISOString();
+    this.save(callback);
+  }
+
   save(callback) {
     let users = User.collection();
     users.save(this, {w:1}, callback);
   }
 
   static validate(user) {
-    if (!user.deviceType || !user.deviceToken || !user.app) return false;
+    if (!user.deviceToken || !user.deviceType || !user.deviceOS || !user.deviceOSVersion || !user.app) return false;
     return true;
   }
 

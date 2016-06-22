@@ -45,7 +45,7 @@ class User {
 
 function _createUsersFromDocs(docs) {
   var users = [];
-  for (userEntry of docs) {
+  for (var userEntry of docs) {
     users.push(new User(userEntry));
   }
   return users;

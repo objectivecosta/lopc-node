@@ -7,7 +7,8 @@ var querystring = require("querystring");
 
 global.config = require('konfig')();
 
-var MongoClient = require('mongodb').MongoClient
+var MongoClient = require('mongodb').MongoClient;
+var ObjectId = require('mongodb').ObjectId;
 var url = `mongodb://${querystring.escape(global.config.mongodb.username)}:${querystring.escape(global.config.mongodb.password)}@${global.config.mongodb.server}:${global.config.mongodb.port}/${global.config.mongodb.database}`;
 MongoClient.connect(url, function (err, db) {
   if (err) console.log('ERROR: ' + err);
@@ -18,8 +19,6 @@ MongoClient.connect(url, function (err, db) {
 var Router = require('./router');
 var ApplePushNotificationService = require('./lib/apns.js');
 
-global.pushConnection = ApplePushNotificationService.connect(null, {pfx: './certs/rJenkins_Push_Dev.p12'});
-
 global.router = new Router(global.app);
 
 var port = 9002;
@@ -28,6 +27,7 @@ global.app.listen(port);
 
 var User = require('./model/user');
 var AdminUser = require('./model/adminUser');
+var App = require('./model/app');
 
 var UserController = require('./controllers/userController');
 var PushController = require('./controllers/pushController');
@@ -43,7 +43,6 @@ global.router.addRoute('GET', '/device/:id', UserController.show);
 global.router.addRoute('GET','/info', function (req, res) {
   git.getLastTag(function (err, tag) {
     if (err && !tag) tag = 'UNKNOWN';
-
     res.json({
       projectName : 'Low Orbit Push Cannon',
       projectVersion: tag

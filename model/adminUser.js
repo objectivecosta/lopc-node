@@ -22,12 +22,13 @@ class AdminUser {
     adminUsers.save(this, {w:1}, callback);
   }
 
-  static usersForQuery(query, callback) {
+  static usersForQuery(query, serialise, callback) {
     let adminUsers = AdminUser.collection();
 
     adminUsers.find(query).toArray(function (err, docs) {
       if (!err) {
-        callback(null, _createUsersFromDocs(docs));
+        if (serialise == true) callback(null, _createUsersFromDocs(docs));
+        else callback(null, docs);
       } else {
         console.log('Error fetching adminUsers: ' + err);
         callback(err, null);
@@ -38,7 +39,7 @@ class AdminUser {
 
 function _createUsersFromDocs(docs) {
   var users = [];
-  for (userEntry of docs) {
+  for (var userEntry of docs) {
     users.push(new AdminUser(userEntry));
   }
   return users;

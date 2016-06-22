@@ -22,6 +22,7 @@ class User {
     this.deviceType = json.deviceType;
     this.deviceOS = json.deviceOS;
     this.deviceOSVersion = json.deviceOSVersion;
+    this.deviceBadgeNumber = 0;
     this.app = app;
     this.deviceLastActiveAt = "" + (new Date()).toISOString();
     this.save(callback);

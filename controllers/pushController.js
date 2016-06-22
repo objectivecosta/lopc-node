@@ -5,7 +5,7 @@ var ApplePushNotificationService = require('../lib/apns');
 var App = require('../model/app');
 var User = require('../model/user');
 
-var connections = [];
+var ObjectId = require('mongodb').ObjectId;
 
 class PushController {
 
@@ -54,21 +54,24 @@ function _actualSend(appId, query, payload, callback) {
   }
 
   User.usersForQuery(query, true, function (err, users) {
-    if (err || users.length != 1) {
-      res.json({result: 'NOK', error: 'Error fetching user from database'});
+    if (err || users.length == 0) {
+      res.json({result: 'NOK', error: 'Error fetching user(s) from database'});
     } else {
-      var user = users[0];
-      var token = user.deviceToken;
-      payload._user = user;
-      ApplePushNotificationService.send(appId, token, payload, function (err, sentPayload) {
-        if (err) {
-          console.log("#_actualSend error: " + err);
-          callback(err, null);
-        } else {
-          console.log("#_actualSend sent!");
-          callback(null, sentPayload);
-        }
-      });
+
+      for (var user of users) {
+        var token = user.deviceToken;
+        payload._user = user;
+        ApplePushNotificationService.send(appId, token, payload, function (err, sentPayload) {
+          if (err) {
+            console.log("#_actualSend error: " + err);
+            callback(err, null);
+          } else {
+            console.log("#_actualSend sent!");
+            callback(null, sentPayload);
+          }
+        });
+      }
+
     }
   });
 

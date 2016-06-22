@@ -1,29 +1,25 @@
+// Setup:
+
 var express = require('express');
 global.app = express();
-var bodyParser = require('body-parser');
-global.app.use(bodyParser.json());
 
-var querystring = require("querystring");
+var bodyParser = require('body-parser');
+
+global.app.use(bodyParser.json());
 
 global.config = require('konfig')();
 
-var MongoClient = require('mongodb').MongoClient;
+require('./lib/mongo')();
+
 var ObjectId = require('mongodb').ObjectId;
-var url = `mongodb://${querystring.escape(global.config.mongodb.username)}:${querystring.escape(global.config.mongodb.password)}@${global.config.mongodb.server}:${global.config.mongodb.port}/${global.config.mongodb.database}`;
-MongoClient.connect(url, function (err, db) {
-  if (err) console.log('ERROR: ' + err);
-  else console.log('Connected to DB');
-  global.database = db;
-});
 
 var Router = require('./router');
 var ApplePushNotificationService = require('./lib/apns.js');
 
 global.router = new Router(global.app);
+global.app.listen(3000);
 
-var port = 9002;
-
-global.app.listen(port);
+// Routes:
 
 var User = require('./model/user');
 var AdminUser = require('./model/adminUser');

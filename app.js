@@ -34,6 +34,8 @@ var PushController = require('./controllers/pushController');
 
 var git = require('./git');
 
+global.router.addRoute('POST', '/push', PushController.send);
+
 global.router.addRoute('POST', '/device', UserController.create);
 global.router.addRoute('GET', '/device', UserController.index);
 global.router.addRoute('GET', '/device/:id', UserController.show);

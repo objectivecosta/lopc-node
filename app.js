@@ -37,7 +37,6 @@ global.router.addRoute('GET', '/device', UserController.index);
 global.router.addRoute('GET', '/device/:id', UserController.show);
 
 global.router.addRoute('GET','/info', function (req, res) {
-  console.log("Got a hit on /info");
   git.getLastTag(function (err, tag) {
     if (err && !tag) tag = 'UNKNOWN';
     res.json({

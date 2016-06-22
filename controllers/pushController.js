@@ -10,9 +10,9 @@ var connections = [];
 class PushController {
 
   static send(req, res) {
-    var payload = req.body;
+    var query = req.body.query;
+    var payload = req.body.payload;
     var appId = req.query.appId;
-    var userId = req.query.userId;
 
     var actualSendCallback = function (err, sentPayload) {
       if (err) {
@@ -35,18 +35,25 @@ class PushController {
             port: 2195
           });
 
-          _actualSend(appId, userId, payload, actualSendCallback);
+          _actualSend(appId, query, payload, actualSendCallback);
         }
       });
     } else {
-      _actualSend(appId, userId, payload, actualSendCallback);
+      _actualSend(appId, query, payload, actualSendCallback);
     }
   }
 
 }
 
-function _actualSend(appId, userId, payload, callback) {
-  User.usersForQuery({_id : new ObjectId(userId)}, true, function (err, users) {
+function _actualSend(appId, query, payload, callback) {
+
+  if (query.id) {
+    var queryId = query.id;
+    delete query.id;
+    query._id = new ObjectId(queryId);
+  }
+
+  User.usersForQuery(query, true, function (err, users) {
     if (err || users.length != 1) {
       res.json({result: 'NOK', error: 'Error fetching user from database'});
     } else {

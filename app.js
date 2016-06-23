@@ -44,6 +44,7 @@ global.router.addRoute('POST', '/push', PushController.send);
 
 global.router.addRoute('POST', '/device', UserController.create);
 global.router.addRoute('GET', '/device', UserController.index);
+global.router.addRoute('POST', '/device/query', UserController.search);
 global.router.addRoute('GET', '/device/:id', UserController.show);
 
 global.router.addRoute('GET','/info', function (req, res) {

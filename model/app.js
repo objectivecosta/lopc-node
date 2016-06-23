@@ -1,5 +1,6 @@
 "use strict";
 var ObjectId = require('mongodb').ObjectID;
+var AdminUser = require('./adminUser');
 
 class App {
 
@@ -34,6 +35,32 @@ class App {
         callback(err, null);
       }
     });
+  }
+
+  static appsForUsername(username, callback) {
+    let adminUsers = AdminUser.collection();
+    adminUsers.aggregate([
+      {
+        $match: {
+          username: username
+        }
+      },
+      {
+        $unwind: "$apps"
+      },
+      {
+        $lookup: {
+          from: App.collectionName(),
+          localField: "apps",
+          foreignField: "_id",
+          as: "appList"
+        }
+      },
+      {
+        $match: { "app": { $ne: [] } }
+      },
+      
+    ], callback);
   }
 }
 

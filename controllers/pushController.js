@@ -9,6 +9,7 @@ var ObjectId = require('mongodb').ObjectId;
 
 class PushController {
   static fetchAll(req, res) {
+    // TODO: This
     // Some clients need to have their pushes fetched.
     // This method will enable that behaviour
 
@@ -84,9 +85,7 @@ function _actualSend(appId, query, payload, callback) {
         } else {
           callback('Unsupported device OS for user' + user._id, null);
         }
-
       }
-
     }
   });
 }

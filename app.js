@@ -37,8 +37,11 @@ var App = require('./model/app');
 
 var UserController = require('./controllers/userController');
 var PushController = require('./controllers/pushController');
+var AppController = require('./controllers/appController');
 
 var git = require('./git');
+
+global.router.addRoute('GET', '/apps', AppController.allApps);
 
 global.router.addRoute('POST', '/push', PushController.send);
 

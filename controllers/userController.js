@@ -1,7 +1,6 @@
 "use strict";
 
 var User = require('../model/user');
-
 var ObjectId = require('mongodb').ObjectId;
 
 class UserController {

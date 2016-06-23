@@ -8,14 +8,14 @@ class UserController {
 
   static index(req, res) {
     User.usersForQuery({}, false, function (err, users) {
-      if (err) res.status(500).json(result: 'NOK', error:  err);
+      if (err) res.status(500).json({result: 'NOK', error: err});
       else res.json(users);
     });
   }
 
   static search(req, res) {
     User.usersForQuery(req.body.query, false, function (err, users) {
-      if (err) res.status(500).json(result: 'NOK', error:  err);
+      if (err) res.status(500).json({result: 'NOK', error: err});
       else res.json(users);
     });
   }

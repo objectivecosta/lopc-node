@@ -12,10 +12,12 @@
   "dependencies": {
     "apn": "^1.7.6",
     "body-parser": "^1.15.2",
+    "bufferutil": "^1.2.1",
     "express": "^4.14.0",
     "konfig": "^0.2.1",
     "mongodb": "^2.1.18",
-    "node-uuid": "^1.4.7"
+    "node-uuid": "^1.4.7",
+    "ws": "^1.1.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",

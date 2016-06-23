@@ -1,4 +1,7 @@
-// Setup:
+// Setup Websocket
+
+
+// Setup Webserver:
 
 var express = require('express');
 global.app = express();

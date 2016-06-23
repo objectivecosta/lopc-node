@@ -38,6 +38,7 @@ class App {
   }
 
   static appsForUsername(username, callback) {
+    var results = [];
     let adminUsers = AdminUser.collection();
     adminUsers.aggregate([
       {
@@ -57,10 +58,30 @@ class App {
         }
       },
       {
-        $match: { "app": { $ne: [] } }
-      },
-      
-    ], callback);
+        $match: { "appList": { $ne: [] } }
+      }
+    ], function (err, entries) {
+      if (err) callback(err, null);
+      else {
+        if (entries.length != 1) {
+          callback('Too many/few users found');
+        } else {
+          var entry = entries[0];
+          delete entry.password;
+          delete entry.apps;
+
+          for (var app of entry.appList) {
+            app.appId = app._id;
+            delete app._id;
+            delete app.description;
+            delete app.developmentPushCertificate;
+            delete app.productionPushCertificate;
+          }
+          callback(null, entry);
+        }
+
+      }
+    });
   }
 }
 

@@ -10,6 +10,10 @@ This project requires TLS by default. **If you'd like to use it with regular HTT
 
 - [iOS 8.0 & up (Swift 3.0)](https://github.com/rafaelc0sta/lopc_swift)
 
+## Status
+
+We've got iOS pushes working great, a relatively decent Web UI that uses only the API (as opposed to going to the DB).
+
 ## How-to setup
 
 ~~Run the CLI, seed the server and then run the app.js :)~~
@@ -18,10 +22,10 @@ This project requires TLS by default. **If you'd like to use it with regular HTT
 ## TODO:
 
 - A decent documentation
-- A decent API
 - a lot more stuff
 - Add decent authentication
 - Add Custom Payload updating
+- Android Version
 
 ## How can I contribute
 

@@ -8,7 +8,7 @@ class git {
       if (error) {
         callback(error, null);
       } else {
-        callback(null, stdout);
+        callback(null, stdout.replace("\n", "").replace(" ", ""));
       }
     });
   }

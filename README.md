@@ -4,7 +4,7 @@ This project intends to be an open-source, self-hosted alternative.
 
 ## TLS
 
-This project requires TLS by default. If you'd like to use it in plain-text, you'll have to make modifications to the source code. Please, don't. Just get a certificate for free from letsencrypt.com and use TLS.
+This project requires TLS by default. **If you'd like to use it with regular HTTP, just don't**. You'll have to modify the source code. Please, don't. Just get a certificate for free from letsencrypt.com and use TLS.
 
 ## SDKs
 

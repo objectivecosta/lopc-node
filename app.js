@@ -3,6 +3,8 @@
 
 // Setup Webserver:
 
+var https = require('https');
+var fs = require('fs');
 var express = require('express');
 global.app = express();
 
@@ -27,7 +29,26 @@ var Router = require('./router');
 var ApplePushNotificationService = require('./lib/apns.js');
 
 global.router = new Router(global.app);
-global.app.listen(3000);
+
+var startServer = function () {
+
+  var serverOptions = {
+     key  : fs.readFileSync(global.config.ssl.certificateKeyPath),
+     cert : fs.readFileSync(global.config.ssl.certificatePath)
+  };
+
+  global.server = https.createServer(serverOptions, global.app).listen(3000, function () {
+     console.log('Started listening on port 3000');
+  });
+}
+
+setInterval(function () {
+  console.log("Restarting webserver (to reload certificates)");
+  global.server.close();
+  startServer();
+}, global.config.ssl.reloadInterval);
+
+startServer();
 
 // Routes:
 

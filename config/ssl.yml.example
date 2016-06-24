@@ -1,0 +1,4 @@
+default:
+  reloadInterval: 604800 # One week in seconds
+  certificatePath: 'CERTIFICATE_PATH'
+  certificateKeyPath: 'CERTIFICATE_KEY_PATH'

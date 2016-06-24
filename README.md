@@ -8,7 +8,7 @@ This project requires TLS by default. If you'd like to use it in plain-text, you
 
 ## SDKs
 
-- (iOS 8.0 & up (swift))[https://github.com/rafaelc0sta/lopc_swift]
+- [iOS 8.0 & up (Swift 3.0)](https://github.com/rafaelc0sta/lopc_swift)
 
 ## How-to setup
 

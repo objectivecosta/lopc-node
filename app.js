@@ -21,14 +21,20 @@ var UserController = require('./controllers/userController');
 var PushController = require('./controllers/pushController');
 var AppController = require('./controllers/appController');
 
-global.router.addRoute('GET', '/u/apps', AppController.allApps);
+var Authentication = require('./middleware/authentication');
 
-global.router.addRoute('POST', '/a/push', PushController.send);
+global.app.use('/c/*', Authentication.client);
+global.app.use('/s/*', Authentication.server);
+global.app.use('/a/*', Authentication.admin);
 
-global.router.addRoute('POST', '/a/device', UserController.create);
-global.router.addRoute('GET', '/u/device', UserController.index);
-global.router.addRoute('POST', '/u/device/query', UserController.search);
-global.router.addRoute('GET', '/u/device/:id', UserController.show);
+global.router.addRoute('GET', '/a/apps', AppController.allApps);
+
+global.router.addRoute('POST', '/s/push', PushController.send);
+global.router.addRoute('POST', '/c/device', UserController.create);
+
+global.router.addRoute('GET', '/a/device', UserController.index);
+global.router.addRoute('POST', '/a/device/query', UserController.search);
+global.router.addRoute('GET', '/a/device/:id', UserController.show);
 
 global.router.addRoute('GET','/info', function (req, res) {
   git.getLastTag(function (err, tag) {

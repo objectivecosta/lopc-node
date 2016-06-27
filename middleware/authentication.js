@@ -29,3 +29,5 @@ class Authentication {
     next();
   }
 }
+
+module.exports = Authentication;

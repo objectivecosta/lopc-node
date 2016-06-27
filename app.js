@@ -4,11 +4,12 @@
 // Setup Webserver:
 
 var express = require('express');
-var Web = require('./web');
+var Web = require('./lib/web');
+var git = require('./lib/git');
 
 global.app = express();
 
-global.config = require('konfig')(); 
+global.config = require('konfig')();
 
 require('./lib/mongo')();
 
@@ -16,15 +17,9 @@ Web.startup();
 
 // Routes:
 
-var User = require('./model/user');
-var AdminUser = require('./model/adminUser');
-var App = require('./model/app');
-
 var UserController = require('./controllers/userController');
 var PushController = require('./controllers/pushController');
 var AppController = require('./controllers/appController');
-
-var git = require('./git');
 
 global.router.addRoute('GET', '/apps', AppController.allApps);
 

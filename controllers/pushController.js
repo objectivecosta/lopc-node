@@ -3,44 +3,35 @@
 var ApplePushNotificationService = require('../lib/apns');
 
 var App = require('../model/app');
-var User = require('../model/user');
+var Device = require('../model/device');
+var SentPush = require('../model/sentPush');
 
 var ObjectId = require('mongodb').ObjectId;
 
 class PushController {
-  static fetchAll(req, res) {
-    // TODO: This
-    // Some clients need to have their pushes fetched.
-    // This method will enable that behaviour
-
-    var appId = req.query.appId;
-    var deviceToken = req.query.deviceToken;
-    var appSecret = req.query.appSecret;
-
-    User.usersForQuery({deviceToken : deviceToken, deviceOS: "Android"}, true, function (err, users) {
-      if (err) {
-        res.status(500).json({result : 'NOK', error: err});
-      } else {
-        if (users.length != 1) {
-          res.status(400).json({result: 'NOK', error: 'Too many/few users found.'});
-        } else {
-
-        }
-      }
-    });
-  }
   static send(req, res) {
     var query = req.body.query;
     var payload = req.body.payload;
     var appId = req.query.appId;
     var env = req.query.env;
 
-    var actualSendCallback = function (err, sentPayload) {
+    var actualSendCallback = function (err, notSent, sent, total) {
+
       if (err) {
-        res.json({result: 'NOK', error: err});
+        res.json({result : "NOK", error: err});
       } else {
-        res.json({result: 'OK'});
+        var push = new SentPush();
+        push.sent = sent;
+        push.failedToSend = notSent;
+        push.audience = total;
+
+        push.save(function (err, docs) {
+          if (err || docs.length == 0) res.json({result: 'UNKWN', error: err});
+          console.log("Docs: " + JSON.stringify(docs));
+        });
+        res.json({result : "OK"});
       }
+
     }
 
     if (!ApplePushNotificationService.hasConnection(appId+"-"+env)) {
@@ -79,41 +70,36 @@ function _actualSend(appId, env, query, payload, callback) {
     query._id = new ObjectId(queryId);
   }
 
-  User.usersForQuery(query, true, function (err, users) {
-    if (err || users.length == 0) {
-      res.json({result: 'NOK', error: 'Error fetching user(s) from database'});
+  Device.devicesForQuery(query, true, function (err, devices) {
+    if (err || devices.length == 0) {
+      console.log("Err: " + err);
+      callback('Error fetching devices from DB', 0, 0, 0);
     } else {
-      for (var user of users) {
+      var sent = 0;
+      var notSent = 0;
+      var total = devices.length;
 
-        if (user.deviceOS == "iPhone OS") {
-          _actualSendApple(appId, env, user, payload, callback);
-        } else if (user.deviceOS == "Android") {
-          _actualSendAndroid(appId, user, payload, callback);
-        } else {
-          callback('Unsupported device OS for user' + user._id, null);
-        }
+      for (var device of devices) {
+        var token = device.deviceToken;
+        payload._device = device;
+
+        ApplePushNotificationService.send(appId+"-"+env, token, payload, function (err, sentPayload) {
+          if (err) {
+            console.log("#_actualSend error: " + err);
+            notSent++;
+          } else {
+            console.log("#_actualSend sent!");
+            sent++;
+          }
+
+          if ((sent + notSent) == total) {
+            callback(null, notSent, sent, total);
+          }
+        });
       }
     }
   });
 }
 
-function _actualSendApple(appId, env, user, payload, callback) {
-  var token = user.deviceToken;
-  payload._user = user;
-  ApplePushNotificationService.send(appId+"-"+env, token, payload, function (err, sentPayload) {
-    if (err) {
-      console.log("#_actualSend error: " + err);
-      callback(err, null);
-    } else {
-      console.log("#_actualSend sent!");
-      user.deviceBadgeNumber
-      callback(null, sentPayload);
-    }
-  });
-}
-
-function _actualSendAndroid(appId, user, payload, callback) {
-
-}
 
 module.exports = PushController;

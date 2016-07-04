@@ -20,7 +20,7 @@ Web.startup();
 // setTimeout(function () {
 //   var fs = require("fs");
 //   var App = require('./model/app');
-//   var file = fs.readFileSync('/Users/rafaelcosta/Documents/rJenkins_Production_Push.p12');
+//   var file = fs.readFileSync('PATH');
 //
 //   App.appsForQuery({}, true, function (err, apps) {
 //     if (err) console.log("ERROR: " + err);

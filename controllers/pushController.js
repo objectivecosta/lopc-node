@@ -33,6 +33,7 @@ class PushController {
     var query = req.body.query;
     var payload = req.body.payload;
     var appId = req.query.appId;
+    var env = req.query.env;
 
     var actualSendCallback = function (err, sentPayload) {
       if (err) {
@@ -42,30 +43,36 @@ class PushController {
       }
     }
 
-    if (!ApplePushNotificationService.hasConnection(appId)) {
+    if (!ApplePushNotificationService.hasConnection(appId+"-"+env)) {
       App.appsForQuery({_id : new ObjectId(appId)}, true, function (err, apps) {
         if (err || apps.length != 1) {
           res.json({result: 'NOK', error: 'Error fetching app from database'});
         } else {
           var app = apps[0];
-          var developmentPushCertificate = app.developmentPushCertificate.buffer;
+          var certificate;
+          if (env == "d") certificate = app.developmentPushCertificate.buffer;
+          else if (env == "p") certificate = app.productionPushCertificate.buffer;
 
-          ApplePushNotificationService.connect(appId, {
-            pfx: developmentPushCertificate,
-            port: 2195
+          var isProd = false;
+          if (env == "p") isProd = true;
+
+          ApplePushNotificationService.connect(appId+"-"+env, {
+            pfx: certificate,
+            port: 2195,
+            production: isProd
           });
 
-          _actualSend(appId, query, payload, actualSendCallback);
+          _actualSend(appId, env, query, payload, actualSendCallback);
         }
       });
     } else {
-      _actualSend(appId, query, payload, actualSendCallback);
+      _actualSend(appId, env, query, payload, actualSendCallback);
     }
   }
 
 }
 
-function _actualSend(appId, query, payload, callback) {
+function _actualSend(appId, env, query, payload, callback) {
   if (query.id) {
     var queryId = query.id;
     delete query.id;
@@ -78,8 +85,8 @@ function _actualSend(appId, query, payload, callback) {
     } else {
       for (var user of users) {
 
-        if (user.deviceOS == "iOS") {
-          _actualSendApple(appId, user, payload, callback);
+        if (user.deviceOS == "iPhone OS") {
+          _actualSendApple(appId, env, user, payload, callback);
         } else if (user.deviceOS == "Android") {
           _actualSendAndroid(appId, user, payload, callback);
         } else {
@@ -90,10 +97,10 @@ function _actualSend(appId, query, payload, callback) {
   });
 }
 
-function _actualSendApple(appId, user, payload, callback) {
+function _actualSendApple(appId, env, user, payload, callback) {
   var token = user.deviceToken;
   payload._user = user;
-  ApplePushNotificationService.send(appId, token, payload, function (err, sentPayload) {
+  ApplePushNotificationService.send(appId+"-"+env, token, payload, function (err, sentPayload) {
     if (err) {
       console.log("#_actualSend error: " + err);
       callback(err, null);
@@ -106,7 +113,7 @@ function _actualSendApple(appId, user, payload, callback) {
 }
 
 function _actualSendAndroid(appId, user, payload, callback) {
-  i
+
 }
 
 module.exports = PushController;

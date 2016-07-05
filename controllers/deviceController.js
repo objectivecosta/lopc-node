@@ -1,21 +1,21 @@
 "use strict";
 
-var User = require('../model/user');
+var Device = require('../model/device');
 var ObjectId = require('mongodb').ObjectId;
 
-class UserController {
+class DeviceController {
 
   static index(req, res) {
-    User.usersForQuery({}, false, function (err, users) {
+    Device.devicesForQuery({}, false, function (err, devices) {
       if (err) res.status(500).json({result: 'NOK', error: err});
-      else res.json(users);
+      else res.json(devices);
     });
   }
 
   static search(req, res) {
-    User.usersForQuery(req.body.query, false, function (err, users) {
+    Device.devicesForQuery(req.body.query, false, function (err, devices) {
       if (err) res.status(500).json({result: 'NOK', error: err});
-      else res.json(users);
+      else res.json(devices);
     });
   }
 
@@ -48,17 +48,17 @@ class UserController {
       else res.json({result : 'OK'});
     }
 
-    User.usersForQuery({deviceToken : req.body.deviceToken}, false, function (err, users) {
+    Device.devicesForQuery({deviceToken : req.body.deviceToken}, false, function (err, devices) {
       if (err) {
-        res.status(500).json({result : 'NOK', error: 'Could not fetch users from DB.'});
+        res.status(500).json({result : 'NOK', error: 'Could not fetch devices from DB.'});
       } else {
-        if (users.length == 0) {
-          var user = new User(req.body);
-          user.app = appId;
-          user.save(saveCallback);
-        } else if (users.length == 1) {
-          var user = users[0];
-          (new User(user)).updateWith(req.body, appId, saveCallback);
+        if (devices.length == 0) {
+          var device = new Device(req.body);
+          device.app = appId;
+          device.save(saveCallback);
+        } else if (devices.length == 1) {
+          var device = devices[0];
+          (new Device(device)).updateWith(req.body, appId, saveCallback);
         } else {
           res.status(500).json({result : 'NOK', error: 'Database inconsistensy (code 5012)'});
         }
@@ -81,4 +81,4 @@ class UserController {
   }
 }
 
-module.exports = UserController;
+module.exports = DeviceController;

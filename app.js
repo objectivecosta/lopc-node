@@ -16,25 +16,34 @@ require('./lib/mongo')();
 Web.startup();
 
 // Routes:
+//
+// setTimeout(function () {
+//   var fs = require("fs");
+//   var App = require('./model/app');
+//   var file = fs.readFileSync('PATH');
+//
+//   App.appsForQuery({}, true, function (err, apps) {
+//     if (err) console.log("ERROR: " + err);
+//     var app = apps[0];
+//     app.productionPushCertificate = file;
+//     app.save();
+//   });
+// }, 3000)
 
-var UserController = require('./controllers/userController');
+
+var DeviceController = require('./controllers/deviceController');
 var PushController = require('./controllers/pushController');
 var AppController = require('./controllers/appController');
 
-var Authentication = require('./middleware/authentication');
 
-global.app.use('/c/*', Authentication.client);
-global.app.use('/s/*', Authentication.server);
-global.app.use('/a/*', Authentication.admin);
+global.router.addRoute('GET', '/apps', AppController.allApps);
 
-global.router.addRoute('GET', '/a/apps', AppController.allApps);
+global.router.addRoute('POST', '/push', PushController.send);
 
-global.router.addRoute('POST', '/s/push', PushController.send);
-global.router.addRoute('POST', '/c/device', UserController.create);
-
-global.router.addRoute('GET', '/a/device', UserController.index);
-global.router.addRoute('POST', '/a/device/query', UserController.search);
-global.router.addRoute('GET', '/a/device/:id', UserController.show);
+global.router.addRoute('POST', '/device', DeviceController.create);
+global.router.addRoute('GET', '/device', DeviceController.index);
+global.router.addRoute('POST', '/device/query', DeviceController.search);
+global.router.addRoute('GET', '/device/:id', DeviceController.show);
 
 global.router.addRoute('GET','/info', function (req, res) {
   git.getLastTag(function (err, tag) {

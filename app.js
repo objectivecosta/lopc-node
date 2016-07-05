@@ -1,11 +1,8 @@
-// Setup Websocket
-
-
 // Setup Webserver:
 
 var express = require('express');
 var Web = require('./lib/web');
-var git = require('./lib/git');
+// var git = require('./lib/git');
 
 global.app = express();
 
@@ -46,11 +43,7 @@ global.router.addRoute('POST', '/device/query', DeviceController.search);
 global.router.addRoute('GET', '/device/:id', DeviceController.show);
 
 global.router.addRoute('GET','/info', function (req, res) {
-  git.getLastTag(function (err, tag) {
-    if (err && !tag) tag = 'UNKNOWN';
-    res.json({
-      projectName : 'Low Orbit Push Cannon',
-      projectVersion: tag
-    });
+  res.json({
+    projectName : 'Low Orbit Push Cannon'
   });
 });

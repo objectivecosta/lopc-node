@@ -5,6 +5,7 @@ var ApplePushNotificationService = require('../lib/apns');
 var App = require('../model/app');
 var Device = require('../model/device');
 var SentPush = require('../model/sentPush');
+var uuid = require('node-uuid');
 
 var ObjectId = require('mongodb').ObjectId;
 
@@ -16,20 +17,20 @@ class PushController {
     var env = req.query.env;
 
     var actualSendCallback = function (err, notSent, sent, total) {
-
       if (err) {
         res.json({result : "NOK", error: err});
       } else {
+        var generatedUUID = uuid.v4();
         var push = new SentPush();
         push.sent = sent;
         push.failedToSend = notSent;
         push.audience = total;
+        push.uuid = generatedUUID;
 
         push.save(function (err, docs) {
-          if (err || docs.length == 0) res.json({result: 'UNKWN', error: err});
-          console.log("Docs: " + JSON.stringify(docs));
+          if (err) res.json({result: 'UNKWN', error: err});
+          else res.json({result : "OK", uuid: generatedUUID});
         });
-        res.json({result : "OK"});
       }
 
     }

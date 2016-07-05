@@ -1,3 +1,20 @@
+// Test connection to Apple
+
+var ascii = require('./lib/ascii');
+
+ascii();
+
+var connectionTester = require('connection-tester');
+
+var connectionTest = connectionTester.test('gateway.push.apple.com', 2195)
+
+if (connectionTest.success == false) {
+  console.log("\nWARNING: Could not reach Apple's Push Gateway.");
+  console.log("WARNING: Check if port 2195 (outbound) is open.");
+  console.log();
+  console.log();
+}
+
 // Setup Webserver:
 
 var express = require('express');

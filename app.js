@@ -19,6 +19,7 @@ if (connectionTest.success == false) {
 
 var express = require('express');
 var Web = require('./lib/web');
+var Authentication = require('./middleware/authentication');
 // var git = require('./lib/git');
 
 global.app = express();

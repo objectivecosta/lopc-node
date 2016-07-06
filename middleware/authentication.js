@@ -1,6 +1,5 @@
 "use strict";
 
-var Authenticator = require('../lib/authenticator');
 var AdminUser = require('../models/adminUser');
 var App = require('../models/app');
 var Device = require('../models/device');

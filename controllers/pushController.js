@@ -10,15 +10,22 @@ var uuid = require('node-uuid');
 var ObjectId = require('mongodb').ObjectId;
 
 class PushController {
+
   static send(req, res) {
     var query = req.body.query;
     var payload = req.body.payload;
     var appId = req.query.appId;
     var env = req.query.env;
 
+
+    if (!query || !payload || !appId || !env) {
+      res.status(400).json({result : "NOK", error: 'Missing params'});
+      return;
+    }
+
     var actualSendCallback = function (err, notSent, sent, total) {
       if (err) {
-        res.json({result : "NOK", error: err});
+        res.status(500).json({result : "NOK", error: err});
       } else {
         var generatedUUID = uuid.v4();
         var push = new SentPush();
@@ -62,6 +69,12 @@ class PushController {
     }
   }
 
+  static reach(req, res) {
+    Device.devicesForQuery(req.body.query, false, function (err, devices) {
+      if (err) res.status(500).json({result: 'NOK', error: err});
+      else res.json(devices);
+    });
+  }
 }
 
 function _actualSend(appId, env, query, payload, callback) {

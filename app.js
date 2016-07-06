@@ -53,15 +53,18 @@ var DeviceController = require('./controllers/deviceController');
 var PushController = require('./controllers/pushController');
 var AppController = require('./controllers/appController');
 
+global.router.addRoute('OPTIONS', '/*', function (req, res) {
+  res.send('OK');
+});
 
 global.router.addRoute('GET', '/apps', AppController.allApps);
 
 global.router.addRoute('POST', '/push', PushController.send);
+global.router.addRoute('POST', '/push/reach', PushController.reach);
 
 global.router.addRoute('POST', '/device', DeviceController.create);
-global.router.addRoute('GET', '/device', DeviceController.index);
-global.router.addRoute('POST', '/device/query', DeviceController.search);
-global.router.addRoute('GET', '/device/:id', DeviceController.show);
+//global.router.addRoute('GET', '/device', DeviceController.index);
+//global.router.addRoute('GET', '/device/:id', DeviceController.show);
 
 global.router.addRoute('GET','/info', function (req, res) {
   res.json({

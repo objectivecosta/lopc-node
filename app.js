@@ -29,6 +29,8 @@ require('./lib/mongo')();
 
 Web.startup();
 
+global.app.use(Authentication.validate);
+
 // Routes:
 //
 // setTimeout(function () {

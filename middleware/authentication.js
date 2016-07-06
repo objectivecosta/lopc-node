@@ -20,6 +20,9 @@ class Authentication {
       // App authentication
       // Also for admin purposes
       _validateAppAuth(req, res, next);
+    } else {
+      if (req.path == "/info") next();
+      else res.status(403).json({result: 'NOK', error: 'Invalid authentication'});
     }
   }
 }

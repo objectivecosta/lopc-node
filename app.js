@@ -20,6 +20,7 @@ if (connectionTest.success == false) {
 var express = require('express');
 var Web = require('./lib/web');
 var Authentication = require('./middleware/authentication');
+var Logger = require('./middleware/logger');
 // var git = require('./lib/git');
 
 global.app = express();
@@ -29,7 +30,7 @@ global.config = require('konfig')();
 require('./lib/mongo')();
 
 Web.startup();
-
+global.app.use(Logger.inject);
 global.app.use(Authentication.validate);
 
 // Routes:

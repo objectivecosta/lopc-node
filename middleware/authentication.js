@@ -1,8 +1,8 @@
 "use strict";
 
-var AdminUser = require('../models/adminUser');
-var App = require('../models/app');
-var Device = require('../models/device');
+var AdminUser = require('../model/adminUser');
+var App = require('../model/app');
+var Device = require('../model/device');
 
 class Authentication {
   static validate(req, res, next) {

@@ -55,7 +55,8 @@ var DeviceController = require('./controllers/deviceController');
 var PushController = require('./controllers/pushController');
 var AppController = require('./controllers/appController');
 
-global.router.addRoute('GET', '/apps', AppController.allApps);
+global.router.addRoute('GET', '/app', AppController.allApps);
+global.router.addRoute('POST', '/app/:id/uploadCertificate', AppController.uploadCertificate);
 
 global.router.addRoute('POST', '/push', PushController.send);
 global.router.addRoute('POST', '/push/reach', PushController.reach);

@@ -4,6 +4,10 @@ var AdminUser = require('../model/adminUser');
 var App = require('../model/app');
 var Device = require('../model/device');
 
+function log(string) {
+  console.log(`[Authentication] ${string}`);
+}
+
 class Authentication {
   static validate(req, res, next) {
     var authenticationType = req.get('x-authorization-type');
@@ -33,6 +37,7 @@ function _validateDeviceAuth(req, res, next) {
   } else {
 
     if (!req.query.appId || !req.get('x-app-client-token')) {
+      log("Missing fields for Device Auth");
       res.status(400).json({result: 'NOK', error: 'Missing fields'});
       return;
     }
@@ -42,11 +47,13 @@ function _validateDeviceAuth(req, res, next) {
 
     App.findById(appId, function (err, apps) {
       if (err) {
+        log("Database error for Device Auth: " + err);
         res.status(500).json({result: 'NOK', error: 'Database error'});
       } else {
         if (app.appClientToken == appClientToken) {
           next();
         } else {
+          log("Invalid client token for Device Auth: " + appClientToken);
           res.status(403).json({result: 'NOK', error: 'Invalid authentication'});
         }
       }

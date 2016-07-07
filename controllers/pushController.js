@@ -69,7 +69,7 @@ class PushController {
   }
 
   static reach(req, res) {
-    Device.devicesForQuery(req.body.query, false, function (err, devices) {
+    Device.find(req.body.query, function (err, devices) {
       if (err) res.status(500).json({result: 'NOK', error: err});
       else res.json(devices);
     });
@@ -83,9 +83,8 @@ function _actualSend(appId, env, query, payload, callback) {
     query._id = new ObjectId(queryId);
   }
 
-  Device.devicesForQuery(query, true, function (err, devices) {
-    if (err || devices.length == 0) {
-      console.log("Err: " + err);
+  Device.find(query, function (err, devices) {
+    if (err) {
       callback('Error fetching devices from DB', 0, 0, 0);
     } else {
       var sent = 0;
@@ -96,12 +95,10 @@ function _actualSend(appId, env, query, payload, callback) {
         var token = device.deviceToken;
         payload._device = device;
 
-        ApplePushNotificationService.send(appId+"-"+env, token, payload, function (err, sentPayload) {
+        ApplePushNotificationService.send(appId + "-" + env, token, payload, function (err, sentPayload) {
           if (err) {
-            console.log("#_actualSend error: " + err);
             notSent++;
           } else {
-            console.log("#_actualSend sent!");
             sent++;
           }
 

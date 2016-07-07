@@ -27,33 +27,36 @@ class PushController {
       if (err) {
         res.status(500).json({result : "NOK", error: err});
       } else {
-        var generatedUUID = uuid.v4();
-        var push = new SentPush();
-        push.sent = sent;
-        push.failedToSend = notSent;
-        push.audience = total;
-        push.uuid = generatedUUID;
+        var sentPush = new SentPush();
 
-        push.save(function (err, docs) {
-          if (err) res.json({result: 'UNKWN', error: err});
-          else res.json({result : "OK", uuid: generatedUUID});
+        delete payload._device;
+
+        sentPush.sent = sent;
+        sentPush.failedToSend = notSent;
+        sentPush.audience = total;
+        sentPush.payload = payload;
+
+        sentPush.save(function (err, saved) {
+          if (err) res.json({result: 'NOK', error: err});
+          else res.json({result : "OK", id: saved._id});
         });
       }
 
     }
 
     if (!ApplePushNotificationService.hasConnection(appId+"-"+env)) {
-      App.appsForQuery({_id : new ObjectId(appId)}, true, function (err, apps) {
-        if (err || apps.length != 1) {
+      App.findById(appId, function (err, app) {
+        if (err) {
           res.json({result: 'NOK', error: 'Error fetching app from database'});
         } else {
-          var app = apps[0];
           var certificate;
-          if (env == "d") certificate = app.developmentPushCertificate.buffer;
-          else if (env == "p") certificate = app.productionPushCertificate.buffer;
+          if (env == "d") certificate = app.developmentPushCertificate;
+          else if (env == "p") certificate = app.productionPushCertificate;
 
           var isProd = false;
           if (env == "p") isProd = true;
+
+          debugger;
 
           ApplePushNotificationService.connect(appId+"-"+env, {
             pfx: certificate,
@@ -70,7 +73,7 @@ class PushController {
   }
 
   static reach(req, res) {
-    Device.devicesForQuery(req.body.query, false, function (err, devices) {
+    Device.find(req.body.query, function (err, devices) {
       if (err) res.status(500).json({result: 'NOK', error: err});
       else res.json(devices);
     });
@@ -84,9 +87,8 @@ function _actualSend(appId, env, query, payload, callback) {
     query._id = new ObjectId(queryId);
   }
 
-  Device.devicesForQuery(query, true, function (err, devices) {
-    if (err || devices.length == 0) {
-      console.log("Err: " + err);
+  Device.find(query, function (err, devices) {
+    if (err) {
       callback('Error fetching devices from DB', 0, 0, 0);
     } else {
       var sent = 0;
@@ -97,12 +99,10 @@ function _actualSend(appId, env, query, payload, callback) {
         var token = device.deviceToken;
         payload._device = device;
 
-        ApplePushNotificationService.send(appId+"-"+env, token, payload, function (err, sentPayload) {
+        ApplePushNotificationService.send(appId + "-" + env, token, payload, function (err, sentPayload) {
           if (err) {
-            console.log("#_actualSend error: " + err);
             notSent++;
           } else {
-            console.log("#_actualSend sent!");
             sent++;
           }
 

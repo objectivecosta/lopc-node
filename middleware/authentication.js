@@ -40,19 +40,14 @@ function _validateDeviceAuth(req, res, next) {
     var appId = req.query.appId;
     var appClientToken = req.get('x-app-client-token');
 
-    App.appsForQuery({_id : new ObjectId(appId)}, true, function (err, apps) {
+    App.findById(appId, function (err, apps) {
       if (err) {
         res.status(500).json({result: 'NOK', error: 'Database error'});
       } else {
-        if (apps.length == 0) {
-          res.status(403).json({result: 'NOK', error: 'Invalid authentication'});
+        if (app.appClientToken == appClientToken) {
+          next();
         } else {
-          var app = apps[0];
-          if (app.appClientToken == appClientToken) {
-            next();
-          } else {
-            res.status(403).json({result: 'NOK', error: 'Invalid authentication'});
-          }
+          res.status(403).json({result: 'NOK', error: 'Invalid authentication'});
         }
       }
     });
@@ -80,19 +75,14 @@ function _validateAppAuth(req, res, next) {
     var appId = req.query.appId;
     var appServerToken = req.get('x-app-server-token');
 
-    App.appsForQuery({_id : new ObjectId(appId)}, true, function (err, apps) {
+    App.findById(appId, function(err, app) {
       if (err) {
-        res.status(500).json({result: 'NOK', error: 'Database error'});
+        res.status(500).json({result: 'NOK', error: err});
       } else {
-        if (apps.length == 0) {
-          res.status(403).json({result: 'NOK', error: 'Invalid authentication'});
+        if (app.appServerToken == appServerToken) {
+          next();
         } else {
-          var app = apps[0];
-          if (app.appServerToken == appServerToken) {
-            next();
-          } else {
-            res.status(403).json({result: 'NOK', error: 'Invalid authentication'});
-          }
+          res.status(403).json({result: 'NOK', error: 'Invalid authentication'});
         }
       }
     });

@@ -15,6 +15,10 @@ if (connectionTest.success == false) {
   console.log();
 }
 
+global.config = require('konfig')();
+
+require('./lib/mongo')();
+
 // Setup Webserver:
 
 var express = require('express');
@@ -26,15 +30,10 @@ var Preflight = require('./middleware/preflight');
 
 global.app = express();
 
-global.config = require('konfig')();
-
-require('./lib/mongo')();
-
 Web.startup();
 global.app.use(Logger.inject);
 global.app.use(Preflight.inject);
 global.app.use(Authentication.validate);
-
 
 // Routes:
 //

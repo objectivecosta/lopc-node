@@ -43,11 +43,10 @@ class PushController {
     }
 
     if (!ApplePushNotificationService.hasConnection(appId+"-"+env)) {
-      App.appsForQuery({_id : new ObjectId(appId)}, true, function (err, apps) {
-        if (err || apps.length != 1) {
+      App.findById(appId, function (err, app) {
+        if (err) {
           res.json({result: 'NOK', error: 'Error fetching app from database'});
         } else {
-          var app = apps[0];
           var certificate;
           if (env == "d") certificate = app.developmentPushCertificate.buffer;
           else if (env == "p") certificate = app.productionPushCertificate.buffer;

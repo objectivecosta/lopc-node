@@ -43,6 +43,8 @@ class DeviceController {
       return;
     }
 
+    req.body.deviceBadgeNumber = 0;
+    req.body.deviceLastActiveAt = new Date();
     Device.findOneAndUpdate({deviceToken : req.body.deviceToken}, req.body, {upsert:true}, function(err, device) {
       if (err) res.status(500).json({result : 'NOK', error: 'Database failed to save'});
       else res.json({result : 'OK'});

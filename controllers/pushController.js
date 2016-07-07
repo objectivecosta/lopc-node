@@ -27,16 +27,18 @@ class PushController {
       if (err) {
         res.status(500).json({result : "NOK", error: err});
       } else {
-        var generatedUUID = uuid.v4();
-        var push = new SentPush();
-        push.sent = sent;
-        push.failedToSend = notSent;
-        push.audience = total;
-        push.uuid = generatedUUID;
+        var sentPush = new SentPush();
 
-        push.save(function (err, docs) {
-          if (err) res.json({result: 'UNKWN', error: err});
-          else res.json({result : "OK", uuid: generatedUUID});
+        delete payload._device;
+
+        sentPush.sent = sent;
+        sentPush.failedToSend = notSent;
+        sentPush.audience = total;
+        sentPush.payload = payload;
+
+        sentPush.save(function (err, saved) {
+          if (err) res.json({result: 'NOK', error: err});
+          else res.json({result : "OK", id: saved._id});
         });
       }
 
@@ -48,11 +50,13 @@ class PushController {
           res.json({result: 'NOK', error: 'Error fetching app from database'});
         } else {
           var certificate;
-          if (env == "d") certificate = app.developmentPushCertificate.buffer;
-          else if (env == "p") certificate = app.productionPushCertificate.buffer;
+          if (env == "d") certificate = app.developmentPushCertificate;
+          else if (env == "p") certificate = app.productionPushCertificate;
 
           var isProd = false;
           if (env == "p") isProd = true;
+
+          debugger;
 
           ApplePushNotificationService.connect(appId+"-"+env, {
             pfx: certificate,

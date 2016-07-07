@@ -4,6 +4,36 @@ var App = require('../model/app');
 var AdminUser = require('../model/adminUser');
 
 class AppController {
+
+  static uploadCertificate(req, res) {
+    if (!req.params.id || !req.body.certificate || !req.query.env) {
+      res.status(400).json({result: 'NOK', error: 'Missing params'});
+      return;
+    }
+
+    if (req.query.env != 'd' && req.query.env != 'p') {
+      res.status(400).json({result: 'NOK', error: 'Invalid env'});
+      return;
+    }
+
+    App.findById(req.params.id, function (err, app) {
+      if (err) {
+        res.status(500).json({result: 'NOK', error: err});
+      } else {
+        if (env == 'p') {
+          app.productionPushCertificate   = Buffer.from(req.body.certificate, 'base64');
+        } else if (env == 'd') {
+          app.developmentPushCertificate  = Buffer.from(req.body.certificate, 'base64');
+        }
+
+        app.save(function (err, saved) {
+          if (err) res.status(500).json({result: 'NOK', error: err});
+          else res.json({result: 'OK'});
+        });
+      }
+    });
+  }
+
   static allApps(req, res) {
     var username = req.query.username;
 

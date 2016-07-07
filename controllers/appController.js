@@ -47,7 +47,7 @@ class AppController {
         res.status(500).json({result: 'NOK', error: err});
       } else {
         var appIds = [];
-        for (var appId of user.apps) {
+        for (var appId of adminUser.apps) {
           appIds.push(global.mongoose.Types.ObjectId(appId))
         }
 

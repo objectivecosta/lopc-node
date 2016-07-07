@@ -45,7 +45,7 @@ function _validateDeviceAuth(req, res, next) {
     var appId = req.query.appId;
     var appClientToken = req.get('x-app-client-token');
 
-    App.findById(appId, function (err, apps) {
+    App.findById(appId, function (err, app) {
       if (err) {
         log("Database error for Device Auth: " + err);
         res.status(500).json({result: 'NOK', error: 'Database error'});

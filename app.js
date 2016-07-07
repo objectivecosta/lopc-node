@@ -21,6 +21,7 @@ var express = require('express');
 var Web = require('./lib/web');
 var Authentication = require('./middleware/authentication');
 var Logger = require('./middleware/logger');
+var Preflight = require('./middleware/preflight');
 // var git = require('./lib/git');
 
 global.app = express();
@@ -31,7 +32,9 @@ require('./lib/mongo')();
 
 Web.startup();
 global.app.use(Logger.inject);
+global.app.use(Preflight.inject);
 global.app.use(Authentication.validate);
+
 
 // Routes:
 //
@@ -52,10 +55,6 @@ global.app.use(Authentication.validate);
 var DeviceController = require('./controllers/deviceController');
 var PushController = require('./controllers/pushController');
 var AppController = require('./controllers/appController');
-
-global.router.addRoute('OPTIONS', '/*', function (req, res) {
-  res.send('OK');
-});
 
 global.router.addRoute('GET', '/apps', AppController.allApps);
 

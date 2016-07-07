@@ -3,6 +3,10 @@
 var Device = require('../model/device');
 var ObjectId = require('mongodb').ObjectId;
 
+function log(string) {
+  console.log(`[DeviceController] ${string}`);
+}
+
 class DeviceController {
 
   static index(req, res) {
@@ -22,6 +26,7 @@ class DeviceController {
   static create(req, res) {
 
     if (!req.query.appId) {
+      log("No appId in +create request");
       res.status(400).json({result : 'NOK', error: 'Invalid request (no appId)'});
       return;
     }
@@ -29,6 +34,7 @@ class DeviceController {
     var appId = req.query.appId;
 
     if (!req.body.deviceToken || !req.body.deviceType || !req.body.deviceOS || !req.body.deviceOSVersion) {
+      log("Invalid +create request params");
       res.status(400).json({result : 'NOK', error: 'Invalid request'});
       return;
     }
@@ -39,6 +45,7 @@ class DeviceController {
     }
 
     if (count > 5) {
+      log("Too many fields in +create");
       res.status(400).json({result : 'NOK', error: 'Invalid request (too many fields)'});
       return;
     }
@@ -48,6 +55,8 @@ class DeviceController {
     Device.findOneAndUpdate({deviceToken : req.body.deviceToken}, req.body, {upsert:true}, function(err, device) {
       if (err) res.status(500).json({result : 'NOK', error: 'Database failed to save'});
       else res.json({result : 'OK'});
+
+      if (err) log("Error adding/updating device");
     });
   }
 

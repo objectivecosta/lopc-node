@@ -56,8 +56,6 @@ class PushController {
           var isProd = false;
           if (env == "p") isProd = true;
 
-          debugger;
-
           ApplePushNotificationService.connect(appId+"-"+env, {
             pfx: certificate,
             port: 2195,
@@ -81,12 +79,6 @@ class PushController {
 }
 
 function _actualSend(appId, env, query, payload, callback) {
-  if (query.id) {
-    var queryId = query.id;
-    delete query.id;
-    query._id = new ObjectId(queryId);
-  }
-
   Device.find(query, function (err, devices) {
     if (err) {
       callback('Error fetching devices from DB', 0, 0, 0);

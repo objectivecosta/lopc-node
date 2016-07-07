@@ -53,7 +53,7 @@ function _validateDeviceAuth(req, res, next) {
         if (app.appClientToken == appClientToken) {
           next();
         } else {
-          log("Invalid client token for Device Auth: " + appClientToken);
+          log(`Invalid client token for Device Auth: ${appClientToken} (should be ${app.appClientToken})`);
           res.status(403).json({result: 'NOK', error: 'Invalid authentication'});
         }
       }

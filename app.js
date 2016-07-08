@@ -59,6 +59,7 @@ global.router.addRoute('GET', '/app', AppController.allApps);
 global.router.addRoute('POST', '/app/:id/uploadCertificate', AppController.uploadCertificate);
 
 global.router.addRoute('POST', '/push', PushController.send);
+global.router.addRoute('POST', '/push/:channel', PushController.sendToChannel);
 global.router.addRoute('POST', '/push/reach', PushController.reach);
 
 global.router.addRoute('POST', '/device', DeviceController.create);

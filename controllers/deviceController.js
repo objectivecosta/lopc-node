@@ -25,7 +25,7 @@ class DeviceController {
 
   static subscribe(req, res) {
     if (!req.params.channel || !req.query.deviceToken) {
-      res.status(400).json({result : 'NOK', error: 'Missing params'});
+      res.status(400).json({result: 'NOK', error: 'Missing params'});
       return;
     }
 
@@ -33,14 +33,14 @@ class DeviceController {
     var deviceToken = req.query.deviceToken;
 
     Device.findOneAndUpdate({deviceToken : deviceToken}, {$push: { channels: channel }}, function (err, removed) {
-      if (err) res.status(500).json({result : 'NOK', error: err});
-      else res.json({result : 'OK'});
+      if (err) res.status(500).json({result: 'NOK', error: err});
+      else res.json({result: 'OK'});
     });
   }
 
   static unsubscribe(req, res) {
     if (!req.params.channel || !req.query.deviceToken) {
-      res.status(400).json({result : 'NOK', error: 'Missing params'});
+      res.status(400).json({result: 'NOK', error: 'Missing params'});
       return;
     }
 
@@ -48,19 +48,19 @@ class DeviceController {
     var deviceToken = req.query.deviceToken;
 
     Device.findOneAndUpdate({deviceToken : deviceToken}, {$pull: { channels: channel }}, function (err, removed) {
-      if (err) res.status(500).json({result : 'NOK', error: err});
-      else res.json({result : 'OK'});
+      if (err) res.status(500).json({result: 'NOK', error: err});
+      else res.json({result: 'OK'});
     });
   }
 
   static channels(req, res) {
     if (!req.params.channel || !req.query.deviceToken) {
-      res.status(400).json({result : 'NOK', error: 'Missing params'});
+      res.status(400).json({result: 'NOK', error: 'Missing params'});
       return;
     }
 
     Device.findOne({deviceToken : deviceToken}, function (err, device) {
-      if (err) res.status(500).json({result : 'NOK', error: err});
+      if (err) res.status(500).json({result: 'NOK', error: err});
       else {
         var channels = device.channels;
         if (!channels) channels = [];
@@ -73,7 +73,7 @@ class DeviceController {
 
     if (!req.query.appId) {
       log("No appId in +create request");
-      res.status(400).json({result : 'NOK', error: 'Missing params'});
+      res.status(400).json({result: 'NOK', error: 'Missing params'});
       return;
     }
 
@@ -81,7 +81,7 @@ class DeviceController {
 
     if (!req.body.deviceToken || !req.body.deviceType || !req.body.deviceOS || !req.body.deviceOSVersion) {
       log("Invalid +create request params");
-      res.status(400).json({result : 'NOK', error: 'Invalid request'});
+      res.status(400).json({result: 'NOK', error: 'Invalid request'});
       return;
     }
 
@@ -92,14 +92,14 @@ class DeviceController {
 
     if (count > 5) {
       log("Too many fields in +create");
-      res.status(400).json({result : 'NOK', error: 'Invalid request (too many fields)'});
+      res.status(400).json({result: 'NOK', error: 'Invalid request (too many fields)'});
       return;
     }
 
     req.body.deviceBadgeNumber = 0;
     req.body.deviceLastActiveAt = new Date();
     Device.findOneAndUpdate({deviceToken : req.body.deviceToken}, req.body, {upsert:true}, function(err, device) {
-      if (err) res.status(500).json({result : 'NOK', error: 'Database failed to save'});
+      if (err) res.status(500).json({result: 'NOK', error: 'Database failed to save'});
       else res.json({result : 'OK'});
 
       if (err) log("Error adding/updating device");

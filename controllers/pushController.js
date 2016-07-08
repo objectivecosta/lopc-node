@@ -11,7 +11,7 @@ var ObjectId = require('mongodb').ObjectId;
 
 var pushCallback = function (err, notSent, sent, total) {
   if (err) {
-    res.status(500).json({result : "NOK", error: err});
+    res.status(500).json({result: "NOK", error: err});
   } else {
     var sentPush = new SentPush();
 
@@ -24,7 +24,7 @@ var pushCallback = function (err, notSent, sent, total) {
 
     sentPush.save(function (err, saved) {
       if (err) res.json({result: 'NOK', error: err});
-      else res.json({result : "OK", id: saved._id});
+      else res.json({result: "OK", id: saved._id});
     });
   }
 
@@ -39,7 +39,7 @@ class PushController {
     var channel = req.params.channel;
 
     if (!channel || !payload || !appId || !env) {
-      res.status(400).json({result : "NOK", error: 'Missing params'});
+      res.status(400).json({result: "NOK", error: 'Missing params'});
       return;
     }
 
@@ -61,7 +61,7 @@ class PushController {
     var env = req.query.env;
 
     if (!query || !payload || !appId || !env) {
-      res.status(400).json({result : "NOK", error: 'Missing params'});
+      res.status(400).json({result: "NOK", error: 'Missing params'});
       return;
     }
 

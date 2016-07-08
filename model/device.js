@@ -9,5 +9,6 @@ module.exports = global.mongoose.model('Device', {
   app: String,
   deviceBadgeNumber: Number,
   deviceLastActiveAt: Date,
-  devicePayload: {}
+  devicePayload: {},
+  channels: [String]
 });

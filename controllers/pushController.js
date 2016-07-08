@@ -4,7 +4,6 @@ var ApplePushNotificationService = require('../lib/apns');
 
 var App = require('../model/app');
 var Device = require('../model/device');
-var Channel = require('../model/channel');
 var SentPush = require('../model/sentPush');
 var uuid = require('node-uuid');
 
@@ -46,11 +45,11 @@ class PushController {
 
     if (!ApplePushNotificationService.hasConnection(appId+"-"+env)) {
       _initiateAPNSConnection(function (err) {
-        if (!err) _sendByChannel(appId, env, channel, payload, pushCallback);
+        if (!err) _sendByQuery(appId, env, {channels : channel}, payload, pushCallback);
         else res.json({result: 'NOK', error: 'Error fetching app from database'});
       });
     } else {
-      _sendByChannel(appId, env, channel, payload, pushCallback)
+      _sendByQuery(appId, env, {channels : channel}, payload, pushCallback);
     }
 
   }
@@ -98,31 +97,6 @@ function _sendByQuery(appId, env, query, payload, callback) {
         payload._device = device;
 
         ApplePushNotificationService.send(appId + "-" + env, token, payload, function (err, sentPayload) {
-          if (err) {
-            notSent++;
-          } else {
-            sent++;
-          }
-
-          if ((sent + notSent) == total) {
-            callback(null, notSent, sent, total);
-          }
-        });
-      }
-    }
-  });
-}
-
-function _sendByChannel(appId, env, channel, payload, callback) {
-  Channel.findOne({name : channel, app : appId}, function (err, channel) {
-    if (err) {
-      callback('Error fetching channel from DB', 0, 0, 0);
-    } else {
-      var sent = 0;
-      var notSent = 0;
-      var total = channel.subscribers.length;
-      for (var subscriber of channel.subscribers) {
-        ApplePushNotificationService.send(appId + "-" + env, subscriber, payload, function (err, sentPayload) {
           if (err) {
             notSent++;
           } else {

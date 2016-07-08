@@ -23,11 +23,57 @@ class DeviceController {
     });
   }
 
+  static subscribe(req, res) {
+    if (!req.params.channel || !req.query.deviceToken) {
+      res.status(400).json({result : 'NOK', error: 'Missing params'});
+      return;
+    }
+
+    var channel = req.params.channel;
+    var deviceToken = req.query.deviceToken;
+
+    Device.findOneAndUpdate({deviceToken : deviceToken}, {$push: { channels: channel }}, function (err, removed) {
+      if (err) res.status(500).json({result : 'NOK', error: err});
+      else res.json({result : 'OK'});
+    });
+  }
+
+  static unsubscribe(req, res) {
+    if (!req.params.channel || !req.query.deviceToken) {
+      res.status(400).json({result : 'NOK', error: 'Missing params'});
+      return;
+    }
+
+    var channel = req.params.channel;
+    var deviceToken = req.query.deviceToken;
+
+    Device.findOneAndUpdate({deviceToken : deviceToken}, {$pull: { channels: channel }}, function (err, removed) {
+      if (err) res.status(500).json({result : 'NOK', error: err});
+      else res.json({result : 'OK'});
+    });
+  }
+
+  static channels(req, res) {
+    if (!req.params.channel || !req.query.deviceToken) {
+      res.status(400).json({result : 'NOK', error: 'Missing params'});
+      return;
+    }
+
+    Device.findOne({deviceToken : deviceToken}, function (err, device) {
+      if (err) res.status(500).json({result : 'NOK', error: err});
+      else {
+        var channels = device.channels;
+        if (!channels) channels = [];
+        res.json(channels);
+      }
+    });
+  }
+
   static create(req, res) {
 
     if (!req.query.appId) {
       log("No appId in +create request");
-      res.status(400).json({result : 'NOK', error: 'Invalid request (no appId)'});
+      res.status(400).json({result : 'NOK', error: 'Missing params'});
       return;
     }
 
@@ -61,7 +107,6 @@ class DeviceController {
   }
 
   static show(req, res) {
-
     Device.findById(req.params.id, function (err, user) {
       if (err) {
         res.status(500).json({result : 'NOK', error: 'Could not fetch users from DB.'});

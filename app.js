@@ -63,6 +63,9 @@ global.router.addRoute('POST', '/push/:channel', PushController.sendToChannel);
 global.router.addRoute('POST', '/push/reach', PushController.reach);
 
 global.router.addRoute('POST', '/device', DeviceController.create);
+global.router.addRoute('POST', '/device/channel/:channel', DeviceController.subscribe);
+global.router.addRoute('DELETE', '/device/channel/:channel', DeviceController.unsubscribe);
+global.router.addRoute('POST', '/device/channel', DeviceController.channels);
 //global.router.addRoute('GET', '/device', DeviceController.index);
 //global.router.addRoute('GET', '/device/:id', DeviceController.show);
 
